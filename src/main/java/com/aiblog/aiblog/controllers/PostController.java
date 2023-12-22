@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/teste")
+@RequestMapping()
 public class TesteController {
 
-    @GetMapping
+    @GetMapping("/posts")
     public String teste() {
         return "End point funcionando com sucesso";
     }
