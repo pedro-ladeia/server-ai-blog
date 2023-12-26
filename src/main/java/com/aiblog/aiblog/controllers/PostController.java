@@ -1,14 +1,13 @@
 package com.aiblog.aiblog.controllers;
 
+import com.aiblog.aiblog.dtos.PostDto;
 import com.aiblog.aiblog.models.PostModel;
 import com.aiblog.aiblog.services.PostService;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +22,13 @@ public class PostController {
     @GetMapping("")
     public ResponseEntity<List<PostModel>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(postService.findAll());
+    }
+
+    @PostMapping("")
+    public ResponseEntity<PostModel> save(@RequestBody @Valid PostDto postDto) { //@Valid to do all validations
+        var postModel = new PostModel();
+        BeanUtils.copyProperties(postDto, postModel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postModel));
     }
 }
