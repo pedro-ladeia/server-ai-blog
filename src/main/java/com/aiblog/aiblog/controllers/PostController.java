@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,5 +33,13 @@ public class PostController {
         BeanUtils.copyProperties(postDto, postModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postModel));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(value= "id") UUID id) {
+        Optional<PostModel> postModelOptional = postService.findById(id);
+        if(!postModelOptional.isPresent()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publication not found");
+        postService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Publication deleted successfully");
     }
 }
