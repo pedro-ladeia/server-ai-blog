@@ -27,6 +27,13 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findById(@PathVariable(value = "id") UUID id) {
+        Optional<PostModel> postModelOptional = postService.findById(id);
+        if(!postModelOptional.isPresent()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publication not found");
+        return ResponseEntity.status(HttpStatus.OK).body(postService.findById(id));
+    }
+
     @PostMapping("")
     public ResponseEntity<PostModel> save(@RequestBody @Valid PostDto postDto) { //@Valid to do all validations
         var postModel = new PostModel();
@@ -41,5 +48,14 @@ public class PostController {
         if(!postModelOptional.isPresent()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publication not found");
         postService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Publication deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable(value = "id") UUID id, @RequestBody @Valid PostDto postDto) {
+        Optional<PostModel> postModelOptional = postService.findById(id);
+        if(!postModelOptional.isPresent()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publication not found");
+        var postModel = postModelOptional.get();
+        BeanUtils.copyProperties(postDto, postModel);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.update(postModel));
     }
 }
