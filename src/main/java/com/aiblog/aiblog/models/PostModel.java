@@ -2,16 +2,15 @@ package com.aiblog.aiblog.models;
 
 
 import jakarta.persistence.*;
-
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "TB_POST")
-public class PostModel implements Serializable {
+public class PostModel extends RepresentationModel<PostModel> implements Serializable {
     private static final long serialVersionUID = 1L; // Version control number to serializable of the class
 
     @Id
