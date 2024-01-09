@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,14 +26,24 @@ public class PostController {
     }
     @GetMapping("")
     public ResponseEntity<List<PostModel>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findAll());
+        List<PostModel> allPosts = postService.findAll();
+        if(!allPosts.isEmpty()) {
+            for (PostModel postModel : allPosts) {
+                UUID id = postModel.getIdPost();
+                postModel.add(linkTo(methodOn(PostController.class).findById(id)).withSelfRel());
+                // Add the endpoint of that register to each register
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(allPosts);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") UUID id) {
         Optional<PostModel> postModelOptional = postService.findById(id);
         if(!postModelOptional.isPresent()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publication not found");
-        return ResponseEntity.status(HttpStatus.OK).body(postService.findById(id));
+        postModelOptional.get().add(linkTo(methodOn(PostController.class).findAll()).withRel("Publications"));
+        // Add the endpoint of the all publications to the register
+        return ResponseEntity.status(HttpStatus.OK).body(postModelOptional.get());
     }
 
     @PostMapping("")
