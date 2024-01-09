@@ -31,6 +31,11 @@ public class PostService {
         postModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         return postRepository.save(postModel);
     }
+
+    public PostModel update(PostModel postModel) {
+        postModel.setUpdatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        return postRepository.save((postModel));
+    }
     public boolean existsById(UUID id) {
         return postRepository.existsById(id);
     }
