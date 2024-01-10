@@ -18,9 +18,6 @@ public class PostModel extends RepresentationModel<PostModel> implements Seriali
     private UUID idPost;
 
     @Column
-    private String name;
-
-    @Column
     private LocalDateTime createdAt;
 
     @Column
@@ -32,7 +29,7 @@ public class PostModel extends RepresentationModel<PostModel> implements Seriali
     @Column
     private String category;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column
@@ -41,7 +38,7 @@ public class PostModel extends RepresentationModel<PostModel> implements Seriali
     @Column
     private String image;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String snippet;
 
 
@@ -51,14 +48,6 @@ public class PostModel extends RepresentationModel<PostModel> implements Seriali
 
     public void setIdPost(UUID idPost) {
         this.idPost = idPost;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LocalDateTime getCreatedAt() {
